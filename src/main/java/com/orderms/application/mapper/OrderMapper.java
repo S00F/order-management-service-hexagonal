@@ -1,10 +1,9 @@
-package com.orderms.infrastructure.mapper;
+package com.orderms.application.mapper;
 
-import com.orderms.adapter.api.dto.OrderDTO;
-import com.orderms.adapter.persistence.entity.OrderEntity;
+import com.orderms.infrastructure.adapter.api.dto.OrderDTO;
+import com.orderms.infrastructure.adapter.persistence.entity.OrderEntity;
 import com.orderms.domain.model.Order;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {

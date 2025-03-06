@@ -1,9 +1,9 @@
-package com.orderms.adapter.persistence;
+package com.orderms.infrastructure.adapter.persistence;
 
 import com.orderms.application.port.output.OrderRepository;
 import com.orderms.domain.model.Order;
-import com.orderms.adapter.persistence.repository.JpaOrderRepository;
-import com.orderms.infrastructure.mapper.OrderMapper;
+import com.orderms.infrastructure.adapter.persistence.repository.JpaOrderRepository;
+import com.orderms.application.mapper.OrderMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

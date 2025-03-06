@@ -1,8 +1,8 @@
-package com.orderms.adapter.api.rest;
+package com.orderms.infrastructure.adapter.api.rest;
 
 import com.orderms.application.port.input.OrderUseCase;
-import com.orderms.adapter.api.dto.OrderDTO;
-import com.orderms.infrastructure.mapper.OrderMapper;
+import com.orderms.infrastructure.adapter.api.dto.OrderDTO;
+import com.orderms.application.mapper.OrderMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

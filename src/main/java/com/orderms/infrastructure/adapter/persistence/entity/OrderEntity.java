@@ -1,4 +1,4 @@
-package com.orderms.adapter.persistence.entity;
+package com.orderms.infrastructure.adapter.persistence.entity;
 
 import com.orderms.domain.model.OrderStatus;
 import jakarta.persistence.*;

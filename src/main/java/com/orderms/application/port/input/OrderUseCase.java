@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-public interface OrderUseCase {
+    public interface OrderUseCase {
     Order createOrder(Order order);
     Optional<Order> getOrder(String orderId);
     List<Order> getAllOrders();
@@ -17,5 +17,4 @@ public interface OrderUseCase {
     List<Order> getOrdersByCustomerId(String customerId);
     Optional<Order> processOrder(String orderId);
     boolean validateOrder(Order order);
-    BigDecimal calculateOrderTotal(Order order);
 }

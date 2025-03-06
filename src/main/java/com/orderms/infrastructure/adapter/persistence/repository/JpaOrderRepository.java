@@ -1,6 +1,6 @@
-package com.orderms.adapter.persistence.repository;
+package com.orderms.infrastructure.adapter.persistence.repository;
 
-import com.orderms.adapter.persistence.entity.OrderEntity;
+import com.orderms.infrastructure.adapter.persistence.entity.OrderEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

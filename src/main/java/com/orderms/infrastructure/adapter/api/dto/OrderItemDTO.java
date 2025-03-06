@@ -1,4 +1,4 @@
-package com.orderms.adapter.api.dto;
+package com.orderms.infrastructure.adapter.api.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;

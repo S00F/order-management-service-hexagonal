@@ -1,8 +1,7 @@
-package com.orderms.adapter.api.dto;
+package com.orderms.infrastructure.adapter.api.dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
