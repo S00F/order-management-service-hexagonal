@@ -11,13 +11,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
 @Tag(name = "Orders", description = "Order management API")
 public class OrderController {
@@ -33,9 +37,7 @@ public class OrderController {
     public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody OrderDTO orderDTO) {
         return ResponseEntity.ok(
                 orderMapper.toDTO(
-                        orderUseCase.createOrder(
-                                orderMapper.toDomain(orderDTO)
-                        )
+                        orderUseCase.createOrder(orderMapper.toDomain(orderDTO))
                 )
         );
     }
@@ -53,14 +55,14 @@ public class OrderController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @Operation(summary = "Get all orders")
-    @ApiResponse(responseCode = "200", description = "List of all orders")
+    @Operation(summary = "Get all orders", description = "Supports pagination, sorting and optional filtering by status")
+    @ApiResponse(responseCode = "200", description = "Paginated list of orders")
     @GetMapping
-    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+    public ResponseEntity<Page<OrderDTO>> getAllOrders(
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @Parameter(description = "Filter by order status") @RequestParam(required = false) OrderStatus status) {
         return ResponseEntity.ok(
-                orderUseCase.getAllOrders().stream()
-                        .map(orderMapper::toDTO)
-                        .toList()
+                orderUseCase.getAllOrders(pageable, status).map(orderMapper::toDTO)
         );
     }
 
@@ -76,9 +78,7 @@ public class OrderController {
             @Valid @RequestBody OrderDTO orderDTO) {
         orderDTO.setOrderId(orderId);
         return ResponseEntity.ok(
-                orderMapper.toDTO(
-                        orderUseCase.updateOrder(orderMapper.toDomain(orderDTO))
-                )
+                orderMapper.toDTO(orderUseCase.updateOrder(orderMapper.toDomain(orderDTO)))
         );
     }
 

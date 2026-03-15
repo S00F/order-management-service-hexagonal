@@ -2,9 +2,12 @@ package com.orderms.infrastructure.adapter.persistence;
 
 import com.orderms.application.port.output.OrderRepository;
 import com.orderms.domain.model.Order;
+import com.orderms.domain.model.OrderStatus;
 import com.orderms.infrastructure.adapter.persistence.repository.JpaOrderRepository;
 import com.orderms.application.mapper.OrderMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,10 +39,15 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> findAll() {
-        return jpaOrderRepository.findAll().stream()
-                .map(orderMapper::toDomain)
-                .collect(Collectors.toList());
+    public Page<Order> findAll(Pageable pageable) {
+        return jpaOrderRepository.findAll(pageable)
+                .map(orderMapper::toDomain);
+    }
+
+    @Override
+    public Page<Order> findByStatus(OrderStatus status, Pageable pageable) {
+        return jpaOrderRepository.findByStatus(status, pageable)
+                .map(orderMapper::toDomain);
     }
 
     @Override

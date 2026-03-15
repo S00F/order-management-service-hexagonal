@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -74,7 +76,7 @@ class OrderControllerTest {
         when(orderUseCase.createOrder(any())).thenReturn(domain);
         when(orderMapper.toDTO(any())).thenReturn(responseDTO);
 
-        mockMvc.perform(post("/api/orders")
+        mockMvc.perform(post("/api/v1/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isOk())
@@ -87,7 +89,7 @@ class OrderControllerTest {
                 .items(List.of(OrderItemDTO.builder().productId("p1").quantity(1).unitPrice(BigDecimal.TEN).build()))
                 .build();
 
-        mockMvc.perform(post("/api/orders")
+        mockMvc.perform(post("/api/v1/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalid)))
                 .andExpect(status().isBadRequest());
@@ -102,7 +104,7 @@ class OrderControllerTest {
         when(orderUseCase.getOrder("order-1")).thenReturn(Optional.of(domain));
         when(orderMapper.toDTO(domain)).thenReturn(dto);
 
-        mockMvc.perform(get("/api/orders/order-1"))
+        mockMvc.perform(get("/api/v1/orders/order-1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.orderId").value("order-1"));
     }
@@ -111,13 +113,44 @@ class OrderControllerTest {
     void getOrder_returns404WhenNotFound() throws Exception {
         when(orderUseCase.getOrder("missing")).thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/api/orders/missing"))
+        mockMvc.perform(get("/api/v1/orders/missing"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    void getAllOrders_returnsPaginatedOrders() throws Exception {
+        Order domain = buildOrder("order-1");
+        OrderDTO dto = buildValidOrderDTO();
+        dto.setOrderId("order-1");
+
+        when(orderUseCase.getAllOrders(any(Pageable.class), eq(null)))
+                .thenReturn(new PageImpl<>(List.of(domain)));
+        when(orderMapper.toDTO(domain)).thenReturn(dto);
+
+        mockMvc.perform(get("/api/v1/orders?page=0&size=10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].orderId").value("order-1"))
+                .andExpect(jsonPath("$.totalElements").value(1));
+    }
+
+    @Test
+    void getAllOrders_filtersByStatus() throws Exception {
+        Order domain = buildOrder("order-1");
+        OrderDTO dto = buildValidOrderDTO();
+        dto.setStatus("CREATED");
+
+        when(orderUseCase.getAllOrders(any(Pageable.class), eq(OrderStatus.CREATED)))
+                .thenReturn(new PageImpl<>(List.of(domain)));
+        when(orderMapper.toDTO(domain)).thenReturn(dto);
+
+        mockMvc.perform(get("/api/v1/orders?status=CREATED"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].status").value("CREATED"));
+    }
+
+    @Test
     void deleteOrder_returns204OnSuccess() throws Exception {
-        mockMvc.perform(delete("/api/orders/order-1"))
+        mockMvc.perform(delete("/api/v1/orders/order-1"))
                 .andExpect(status().isNoContent());
     }
 
@@ -126,7 +159,7 @@ class OrderControllerTest {
         doThrow(new OrderNotFoundException("Order not found with id: missing"))
                 .when(orderUseCase).deleteOrder("missing");
 
-        mockMvc.perform(delete("/api/orders/missing"))
+        mockMvc.perform(delete("/api/v1/orders/missing"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").exists());
     }
@@ -141,7 +174,7 @@ class OrderControllerTest {
         when(orderUseCase.updateOrderStatus(eq("order-1"), eq(OrderStatus.CONFIRMED))).thenReturn(domain);
         when(orderMapper.toDTO(domain)).thenReturn(dto);
 
-        mockMvc.perform(patch("/api/orders/order-1/status")
+        mockMvc.perform(patch("/api/v1/orders/order-1/status")
                         .param("status", "CONFIRMED"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("CONFIRMED"));
