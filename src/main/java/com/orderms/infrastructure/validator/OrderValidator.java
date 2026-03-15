@@ -19,7 +19,6 @@ public class OrderValidator {
 
         validateCustomerId(order, errors);
         validateItems(order, errors);
-        validateAmounts(order, errors);
 
         return new ValidationResult(errors.isEmpty(), errors);
     }
@@ -55,9 +54,4 @@ public class OrderValidator {
         }
     }
 
-    private void validateAmounts(Order order, List<String> errors) {
-        if (order.getTotalAmount() == null || order.getTotalAmount().compareTo(BigDecimal.ZERO) < 0) {
-            errors.add("Total amount cannot be negative");
-        }
-    }
 }

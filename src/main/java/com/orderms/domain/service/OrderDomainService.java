@@ -4,11 +4,13 @@ import com.orderms.domain.model.Order;
 import com.orderms.domain.model.OrderStatus;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class OrderDomainService {
 
 
     public Order buildOrder(Order order) {
+        order.setOrderId(UUID.randomUUID().toString());
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(OrderStatus.CREATED);
         order.setTotalAmount(calculateOrderTotal(order));
