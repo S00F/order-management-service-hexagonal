@@ -20,8 +20,7 @@ public class OrderEntity {
     @Id
     private String id;
     private String customerId;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "order_id")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItemEntity> items;
     private BigDecimal totalAmount;
     @Enumerated(EnumType.STRING)

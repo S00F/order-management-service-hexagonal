@@ -22,6 +22,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Order save(Order order) {
         var orderEntity = orderMapper.toEntity(order);
+        if (orderEntity.getItems() != null) {
+            orderEntity.getItems().forEach(item -> item.setOrder(orderEntity));
+        }
         var savedEntity = jpaOrderRepository.save(orderEntity);
         return orderMapper.toDomain(savedEntity);
     }

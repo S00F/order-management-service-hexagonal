@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changes/01-create-orders-schema.sql
+  - include:
+      file: db/changelog/changes/02-insert-sample-data.sql
+  - include:
+      file: db/changelog/changes/03-drop-unused-columns.sql

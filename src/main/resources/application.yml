@@ -3,7 +3,7 @@ server:
     context-path: /orderms
 spring:
   liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.xml
+    change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
   datasource:
     url: jdbc:h2:mem:orderdb
